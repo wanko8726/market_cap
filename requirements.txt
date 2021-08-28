@@ -16,7 +16,6 @@ django-bootstrap4==1.1.1
 fake-useragent==0.1.11
 idna==2.10
 lxml==4.6.3
-openssl==1.1.1
 parse==1.19.0
 pip==21.1.1
 pycparser==2.20
