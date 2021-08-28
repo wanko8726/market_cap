@@ -1,1 +1,1 @@
-web: gunicorn market_cap.wsgi --log-file -
+web: gunicorn market_caps_www.wsgi --log-file -
