@@ -6,8 +6,8 @@ asgiref==3.3.4
 beautifulsoup4==4.9.3
 brotlipy==0.7.0
 bs4==0.0.1
-ca-certificates==2021.5.25
-certifi==2021.5.30
+ca-certificates
+certifi
 cffi==1.14.5
 chardet==4.0.0
 chromedriver-binary==91.0.4472.19.0
