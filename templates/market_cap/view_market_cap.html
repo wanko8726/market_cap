@@ -1,0 +1,299 @@
+{% extends "market_cap/base.html" %}
+{% load humanize %}
+{% load utils %}
+
+{% block title %}view market cap{% endblock title %}
+
+{% block content %}
+    <h4 class="mt-4 border-bottom">market cap list</h4>
+
+    <div>検索条件</div>
+    <table class="table table-bordered">
+        <form method="post" action="">
+            {% csrf_token %}
+            <tr>
+                <td>
+                    {{ form.is_select_coin_id }}
+                    <span>coin id</span>
+                </td>
+                <td>
+                    {{ form.coin_id }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.is_select_coin_name }}
+                    <span>coin name</span>
+                </td>
+                <td>
+                    {{ form.coin_name }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.is_select_coin_code }}
+                    <span>coin code</span>
+                </td>
+                <td>
+                    {{ form.coin_code }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.is_select_price }}
+                    <span>price</span>
+                </td>
+                <td>
+                    {{ form.min_price }} ~ {{ form.max_price }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.is_select_1h }}
+                    <span>1h</span>
+                </td>
+                <td>
+                    {{ form.min_1h }} ~ {{ form.max_1h }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.is_select_24h }}
+                    <span>24h</span>
+                </td>
+                <td>
+                    {{ form.min_24h }} ~ {{ form.max_24h }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.is_select_7d }}
+                    <span>7d</span>
+                </td>
+                <td>
+                    {{ form.min_7d }} ~ {{ form.max_7d }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.is_select_24h_volume }}
+                    <span>24h volume</span>
+                </td>
+                <td>
+                    {{ form.min_24h_volume }} ~ {{ form.max_24h_volume }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.is_select_market_cap }}
+                    <span>market cap</span>
+                </td>
+                <td>
+                    {{ form.min_market_cap }} ~ {{ form.max_market_cap }}
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input class="btn btn-primary" type="submit" value="Submit">
+                    <input class="btn btn-secondary" type="reset" value="Reset">
+                </td>
+            </tr>
+        </form>
+    </table>
+    <table id="market-cap-table" class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>通貨名</th>
+            <th scope="col">価格(参考)</th>
+            <th scope="col">1h</th>
+            <th scope="col">24h</th>
+            <th scope="col">7d</th>
+            <th scope="col">24h 取引量</th>
+            <th scope="col">規模</th>
+            <th scope="col">グラフ</th>
+            <th scope="col">市場規模/取引高</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for market_cap in market_caps %}
+            <tr>
+                <td><a href="{{ market_cap.info_url}}">
+                    {% if market_cap.coin_name != None %}
+                    {{ market_cap.coin_name }}
+                    {% endif %}
+                </a></td>
+                <td>
+                    {% if market_cap.price != None %}
+                    ${{ market_cap.price | intcomma | floatformat:2 }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if market_cap.h1 != None %}
+                    {{ market_cap.h1 }}%
+                    {% endif %}
+                </td>
+                <td>
+                    {% if market_cap.h24 != None %}
+                    {{ market_cap.h24 }}%
+                    {% endif %}
+                </td>
+                <td>
+                    {% if market_cap.d7 != None %}
+                    {{ market_cap.d7 }}%
+                    {% endif %}
+                </td>
+                <td>
+                    {% if market_cap.h24_volume != None %}
+                    ${{ market_cap.h24_volume | intcomma }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if market_cap.market_cap != None %}
+                    ${{ market_cap.market_cap | intcomma }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if market_cap.sparkline_url != None %}
+                    <img src="{{ market_cap.sparkline_url }}" alt="sparkline">
+                    {% endif %}
+                </td>
+                <td>
+                    {% if market_cap.h24_volume != None and market_cap.market_cap != None %}
+                    ${{ market_cap.h24_volume | division:market_cap.market_cap | intcomma | floatformat:2 }}
+                    {% endif %}
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <script type="text/javascript">
+        chkbox_coin_id = $("#id_is_select_coin_id")
+        input_coin_id = $("#id_coin_id")
+        chkbox_coin_name = $("#id_is_select_coin_name")
+        input_coin_name = $("#id_coin_name")
+        chkbox_coin_code = $("#id_is_select_coin_code")
+        input_coin_code = $("#id_coin_code")
+        chkbox_price = $("#id_is_select_price")
+        input_min_price = $("#id_min_price")
+        input_max_price = $("#id_max_price")
+        chkbox_1h = $("#id_is_select_1h")
+        input_min_1h = $("#id_min_1h")
+        input_max_1h = $("#id_max_1h")
+        chkbox_24h = $("#id_is_select_24h")
+        input_min_24h = $("#id_min_24h")
+        input_max_24h = $("#id_max_24h")
+        chkbox_7d = $("#id_is_select_7d")
+        input_min_7d = $("#id_min_7d")
+        input_max_7d = $("#id_max_7d")
+        chkbox_24h_volume = $("#id_is_select_24h_volume")
+        input_min_24h_volume = $("#id_min_24h_volume")
+        input_max_24h_volume = $("#id_max_24h_volume")
+        chkbox_market_cap = $("#id_is_select_market_cap")
+        input_min_market_cap = $("#id_min_market_cap")
+        input_max_market_cap = $("#id_max_market_cap")
+
+        $(document).ready(function(){
+            {# テーブルを並び替え可能にする #}
+            $("#market-cap-table").tablesorter()
+
+            {# 入力フォームをすべて無効にする#}
+            input_coin_id.prop("disabled", true)
+            input_coin_name.prop("disabled", true)
+            input_coin_code.prop("disabled", true)
+            input_min_price.prop("disabled", true)
+            input_max_price.prop("disabled", true)
+            input_min_1h.prop("disabled", true)
+            input_max_1h.prop("disabled", true)
+            input_min_24h.prop("disabled", true)
+            input_max_24h.prop("disabled", true)
+            input_min_7d.prop("disabled", true)
+            input_max_7d.prop("disabled", true)
+            input_min_24h_volume.prop("disabled", true)
+            input_max_24h_volume.prop("disabled", true)
+            input_min_market_cap.prop("disabled", true)
+            input_max_market_cap.prop("disabled", true)
+
+            {# チェックボックスの値に応じて、入力フォームの無効/有効を切り替える #}
+            chkbox_coin_id.on("change", function(){
+                if (chkbox_coin_id.prop("checked")){
+                    input_coin_id.prop("disabled", false)
+                } else {
+                    input_coin_id.prop("disabled", true)
+                }
+            })
+            chkbox_coin_name.on("change", function(){
+                if (chkbox_coin_name.prop("checked")){
+                    input_coin_name.prop("disabled", false)
+                } else {
+                    input_coin_name.prop("disabled", true)
+                }
+            })
+            chkbox_coin_code.on("change", function(){
+                if (chkbox_coin_code.prop("checked")){
+                    input_coin_code.prop("disabled", false)
+                } else {
+                    input_coin_code.prop("disabled", true)
+                }
+            })
+            chkbox_price.on("change", function(){
+                if (chkbox_price.prop("checked")){
+                    input_min_price.prop("disabled", false)
+                    input_max_price.prop("disabled", false)
+                } else {
+                    input_min_price.prop("disabled", true)
+                    input_max_price.prop("disabled", true)
+                }
+            })
+            chkbox_1h.on("change", function(){
+                if (chkbox_1h.prop("checked")){
+                    input_min_1h.prop("disabled", false)
+                    input_max_1h.prop("disabled", false)
+                } else {
+                    input_min_1h.prop("disabled", true)
+                    input_max_1h.prop("disabled", true)
+                }
+            })
+            chkbox_24h.on("change", function(){
+                if (chkbox_24h.prop("checked")){
+                    input_min_24h.prop("disabled", false)
+                    input_max_24h.prop("disabled", false)
+                } else {
+                    input_min_24h.prop("disabled", true)
+                    input_max_24h.prop("disabled", true)
+                }
+            })
+            chkbox_7d.on("change", function(){
+                if (chkbox_7d.prop("checked")){
+                    input_min_7d.prop("disabled", false)
+                    input_max_7d.prop("disabled", false)
+                } else {
+                    input_min_7d.prop("disabled", true)
+                    input_max_7d.prop("disabled", true)
+                }
+            })
+            chkbox_24h_volume.on("change", function(){
+                if (chkbox_24h_volume.prop("checked")){
+                    input_min_24h_volume.prop("disabled", false)
+                    input_max_24h_volume.prop("disabled", false)
+                } else {
+                    input_min_24h_volume.prop("disabled", true)
+                    input_max_24h_volume.prop("disabled", true)
+                }
+            })
+            chkbox_market_cap.on("change", function(){
+                if (chkbox_market_cap.prop("checked")){
+                    input_min_market_cap.prop("disabled", false)
+                    input_max_market_cap.prop("disabled", false)
+                } else {
+                    input_min_market_cap.prop("disabled", true)
+                    input_max_market_cap.prop("disabled", true)
+                }
+            })
+        })
+
+    </script>
+
+{% endblock content %}
