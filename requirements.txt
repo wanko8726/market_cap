@@ -1,7 +1,7 @@
 # This file may be used to create an environment using:
 # $ conda create --name <env> --file <this file>
 # platform: win-64
-alabaster=0.7.12
+alabaster==0.7.12
 anyio=2.2.0
 appdirs=1.4.4
 argh=0.26.2
