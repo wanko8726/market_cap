@@ -85,84 +85,84 @@ class CoinGecko:
             market_caps.append(market_cap)
 
         return market_caps
+    #
+    # def get_market_caps_selenium(self, page: int = 1):
+    #     import chromedriver_binary
+    #     from selenium import webdriver
+    #
+    #     print("current page: " + str(page))
+    #
+    #     options = webdriver.ChromeOptions()
+    #     options.add_argument("--headless")
+    #     options.add_argument('--disable-gpu')
+    #     options.add_argument('--disable-extensions')
+    #     options.add_argument('--proxy-server="direct://"')
+    #     options.add_argument('--proxy-bypass-list=*')
+    #     options.add_argument('--blink-settings=imagesEnabled=false')
+    #     options.add_argument('--lang=ja')
+    #     options.add_argument('--no-sandbox')
+    #     options.add_argument('--disable-dev-shm-usage')
+    #     options.add_argument("--log-level=3")
+    #     options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36')
+    #     options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    #     options.add_experimental_option('useAutomationExtension', False)
+    #     options.page_load_strategy = 'eager'
+    #
+    #     driver = webdriver.Chrome(chrome_options=options)
+    #
+    #     driver.get(self.coingecko_url + "?page=" + str(page))
+    #
+    #     dfs = pd.read_html(driver.find_element_by_tag_name("table").get_attribute("outerHTML"))
+    #     data_frame = pd.concat(dfs, ignore_index=True)
+    #     # print(data_frame[1:2])
+    #     # data_frame.to_csv("test.csv")
+    #     table_rows = driver.find_element_by_tag_name("table").find_elements_by_tag_name("tr")[1:]
+    #
+    #     market_caps = []
+    #     for i in range(0, len(table_rows)):
+    #         market_cap = MarketCap()
+    #         row = table_rows[i]
+    #
+    #         table_data = row.find_elements_by_tag_name("td")
+    #
+    #         market_cap.coin_id = int(table_data[0].find_element_by_tag_name("i").get_attribute("data-coin-id"))
+    #         coin_name_elements = table_data[2].find_elements_by_tag_name("a")
+    #         market_cap.coin_name = str(coin_name_elements[0].get_attribute("textContent")).replace("\n", "")
+    #         market_cap.coin_code = str(coin_name_elements[1].get_attribute("textContent")).replace("\n", "")
+    #         market_cap.info_url = str(coin_name_elements[1].get_attribute("href"))
+    #
+    #         price = data_frame.at[i, "Price"]
+    #         h1 = data_frame.at[i, "1h"]
+    #         h24 = data_frame.at[i, "24h"]
+    #         d7 = data_frame.at[i, "7d"]
+    #         h24_volume = data_frame.at[i, "24h Volume"]
+    #         mkt_cap = data_frame.at[i, "Mkt Cap"]
+    #
+    #         if not pd.isnull(price):
+    #             market_cap.price = float(re.sub("[$,]", "", price))
+    #         if not pd.isnull(h1) and h1 != "?":
+    #             market_cap.h1 = float(h1.replace("%", ""))
+    #         if not pd.isnull(h24) and h24 != "?":
+    #             market_cap.h24 = float(h24.replace("%", ""))
+    #         if not pd.isnull(d7) and d7 != "?":
+    #             market_cap.d7 = float(d7.replace("%", ""))
+    #         if not pd.isnull(h24_volume) and h24_volume != "?":
+    #             market_cap.h24_volume = float(re.sub("[$,]", "", h24_volume))
+    #         if not pd.isnull(mkt_cap) and mkt_cap != "?":
+    #             market_cap.market_cap = float(re.sub("[$,]", "", mkt_cap))
+    #
+    #         market_cap.sparkline_url = "https://www.coingecko.com/coins/{}/sparkline".format(market_cap.coin_id)
+    #         market_caps.append(market_cap)
+    #         # print(market_cap)
+    #
+    #     return market_caps
 
-    def get_market_caps_selenium(self, page: int = 1):
-        import chromedriver_binary
-        from selenium import webdriver
-
-        print("current page: " + str(page))
-
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
-        options.add_argument('--disable-gpu')
-        options.add_argument('--disable-extensions')
-        options.add_argument('--proxy-server="direct://"')
-        options.add_argument('--proxy-bypass-list=*')
-        options.add_argument('--blink-settings=imagesEnabled=false')
-        options.add_argument('--lang=ja')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument("--log-level=3")
-        options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36')
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option('useAutomationExtension', False)
-        options.page_load_strategy = 'eager'
-
-        driver = webdriver.Chrome(chrome_options=options)
-
-        driver.get(self.coingecko_url + "?page=" + str(page))
-
-        dfs = pd.read_html(driver.find_element_by_tag_name("table").get_attribute("outerHTML"))
-        data_frame = pd.concat(dfs, ignore_index=True)
-        # print(data_frame[1:2])
-        # data_frame.to_csv("test.csv")
-        table_rows = driver.find_element_by_tag_name("table").find_elements_by_tag_name("tr")[1:]
-
-        market_caps = []
-        for i in range(0, len(table_rows)):
-            market_cap = MarketCap()
-            row = table_rows[i]
-
-            table_data = row.find_elements_by_tag_name("td")
-
-            market_cap.coin_id = int(table_data[0].find_element_by_tag_name("i").get_attribute("data-coin-id"))
-            coin_name_elements = table_data[2].find_elements_by_tag_name("a")
-            market_cap.coin_name = str(coin_name_elements[0].get_attribute("textContent")).replace("\n", "")
-            market_cap.coin_code = str(coin_name_elements[1].get_attribute("textContent")).replace("\n", "")
-            market_cap.info_url = str(coin_name_elements[1].get_attribute("href"))
-
-            price = data_frame.at[i, "Price"]
-            h1 = data_frame.at[i, "1h"]
-            h24 = data_frame.at[i, "24h"]
-            d7 = data_frame.at[i, "7d"]
-            h24_volume = data_frame.at[i, "24h Volume"]
-            mkt_cap = data_frame.at[i, "Mkt Cap"]
-
-            if not pd.isnull(price):
-                market_cap.price = float(re.sub("[$,]", "", price))
-            if not pd.isnull(h1) and h1 != "?":
-                market_cap.h1 = float(h1.replace("%", ""))
-            if not pd.isnull(h24) and h24 != "?":
-                market_cap.h24 = float(h24.replace("%", ""))
-            if not pd.isnull(d7) and d7 != "?":
-                market_cap.d7 = float(d7.replace("%", ""))
-            if not pd.isnull(h24_volume) and h24_volume != "?":
-                market_cap.h24_volume = float(re.sub("[$,]", "", h24_volume))
-            if not pd.isnull(mkt_cap) and mkt_cap != "?":
-                market_cap.market_cap = float(re.sub("[$,]", "", mkt_cap))
-
-            market_cap.sparkline_url = "https://www.coingecko.com/coins/{}/sparkline".format(market_cap.coin_id)
-            market_caps.append(market_cap)
-            # print(market_cap)
-
-        return market_caps
-
-    def get_market_caps_multi(self, page=1):
-        p = Pool(os.cpu_count())
-        result = p.map(self.get_market_caps, range(1, page+1))
-        merged_result = []
-        [merged_result.extend(market_caps) for market_caps in result]
-        return merged_result
+    # def get_market_caps_multi(self, page=1):
+    #     p = Pool(os.cpu_count())
+    #     result = p.map(self.get_market_caps, range(1, page+1))
+    #     merged_result = []
+    #     [merged_result.extend(market_caps) for market_caps in result]
+    #     return merged_result
 
 
 class MarketCap:
