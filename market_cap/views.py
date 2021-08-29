@@ -9,6 +9,10 @@ from django.db.models import Q
 from market_cap.models import MarketCap, MarketCapList, MarketCapFormModel
 from .forms import MarketCapForm
 
+import requests
+from .service import coinGecko
+from .service.coinGecko import CoinGecko
+
 
 def view_market_cap(request):
     market_caps = []
@@ -129,9 +133,9 @@ def view_market_cap(request):
 
 
 def initialize_market_cap_db(request):
-    from .service import coinGecko
-    from .service.coinGecko import CoinGecko
+
     market_caps = CoinGecko().get_all_market_caps(1, 92)
+
     for i in range(0, len(market_caps)):
         MarketCap.objects.create(
             coin_id=market_caps.at[i, "coin_id"],

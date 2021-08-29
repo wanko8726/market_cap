@@ -82,9 +82,49 @@ class CoinGecko:
 
             market_cap.sparkline_url = "https://www.coingecko.com/coins/{}/sparkline".format(market_cap.coin_id)
 
+            # while True:
+            #     response = requests.get(market_cap.sparkline_url)
+            #     if response.status_code == "429":
+            #         from time import sleep
+            #         print("response code: 429. Retry after 10s.")
+            #         sleep(10)
+            #         continue
+            #
+            #     market_cap.sparkline_source = response.content
+            #     break
+
             market_caps.append(market_cap)
 
         return market_caps
+
+    def get_sparkline_source(self, sparkline_url: str):
+        while True:
+            response = requests.get(sparkline_url)
+            if response.status_code == "429":
+                from time import sleep
+                print("response code: 429. Retry after 10s.")
+                sleep(10)
+                continue
+
+            if response.status_code == "404":
+                return None
+
+            return response.content
+
+    def get_sparkline_sources(self, sparkline_urls):
+        from concurrent.futures import ThreadPoolExecutor
+        executor = ThreadPoolExecutor(max_workers=100)
+
+        futures = []
+        for sparkline_url in sparkline_urls:
+            futures.append(executor.submit(self.get_sparkline_source, sparkline_url))
+
+        results = [future.result() for future in futures]
+
+        executor.shutdown()
+
+        return results
+
     #
     # def get_market_caps_selenium(self, page: int = 1):
     #     import chromedriver_binary
@@ -177,6 +217,7 @@ class MarketCap:
     h24_volume: float = None
     market_cap: float = None
     sparkline_url: str = None
+    sparkline_source: str = None
 
     def __init__(self):
         pass

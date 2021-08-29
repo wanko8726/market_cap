@@ -39,7 +39,7 @@ class MarketCapList(list):
 
 
 class MarketCap(models.Model):
-    coin_id: int = models.IntegerField("coin id")
+    coin_id: int = models.IntegerField("coin id", primary_key=True)
     coin_name: str = models.CharField("coin name", max_length=255, null=True, blank=True)
     coin_code: str = models.CharField("coin code", max_length=20, null=True, blank=True)
     info_url: str = models.CharField("info url", max_length=2083, null=True, blank=True)
@@ -50,6 +50,7 @@ class MarketCap(models.Model):
     h24_volume: float = models.FloatField("h24", null=True, blank=True)
     market_cap: float = models.FloatField("market", null=True, blank=True)
     sparkline_url: str = models.CharField("sparkline url", max_length=2083, null=True, blank=True)
+    sparkline_source: str = models.CharField("sparkline source", max_length=20480, null=True, blank=True)
 
     def __str__(self):
         return str(["{}={}".format(key, value) for key, value in self.__dict__.items()])
