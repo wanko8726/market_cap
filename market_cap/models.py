@@ -2,8 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-from django.db import models
-
 
 class MarketCapList(list):
     def __init__(self):
@@ -39,7 +37,7 @@ class MarketCapList(list):
 
 
 class MarketCap(models.Model):
-    coin_id: int = models.IntegerField("coin id", primary_key=True)
+    coin_id: int = models.IntegerField("coin id")
     coin_name: str = models.CharField("coin name", max_length=255, null=True, blank=True)
     coin_code: str = models.CharField("coin code", max_length=20, null=True, blank=True)
     info_url: str = models.CharField("info url", max_length=2083, null=True, blank=True)

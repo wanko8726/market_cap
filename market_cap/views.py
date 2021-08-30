@@ -1,16 +1,11 @@
-from django.shortcuts import render
-
 # Create your views here.
 
-
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Q
-from market_cap.models import MarketCap, MarketCapList, MarketCapFormModel
+from market_cap.models import MarketCap, MarketCapFormModel
 from .forms import MarketCapForm
 
-import requests
-from .service import coinGecko
 from .service.coinGecko import CoinGecko
 
 
@@ -135,6 +130,8 @@ def view_market_cap(request):
 def initialize_market_cap_db(request):
 
     market_caps = CoinGecko().get_all_market_caps(1, 92)
+
+    MarketCap.objects.all().delete()
 
     for i in range(0, len(market_caps)):
         MarketCap.objects.create(
